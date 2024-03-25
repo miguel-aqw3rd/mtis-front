@@ -19,13 +19,22 @@ public class Goal {
         this.favorite = favorite;
         this.entryId = entryId;
     }
+    // Overloaded constructor for POST
+    public Goal(String description, String frequency, boolean active, boolean favorite) {
+        this.description = description;
+        this.frequency = frequency;
+        this.active = active;
+        this.favorite = favorite;
+    }
     public Goal(JSONObject json) throws JSONException {
         this.id = json.getInt("id");
         this.description = json.getString("description");
         this.frequency = json.getString("frequency");
         this.active = json.getBoolean("active");
         this.favorite = json.getBoolean("favorite");
-        this.entryId = json.getInt("entry_id");
+        try {
+            this.entryId = json.getInt("entry_id");
+        }catch (JSONException jsonException){/*Just in case the goal is not related to any entry*/}
     }
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();

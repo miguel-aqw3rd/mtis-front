@@ -14,7 +14,7 @@ public class EntryGroup {
     private Entry main;
     private int level;
     private boolean favorite;
-    private ArrayList<Entry> entries;
+    private ArrayList<Entry> entries = new ArrayList<Entry>();
 
     public EntryGroup(int id, Entry root, Entry main, int level, boolean favorite, ArrayList<Entry> entries) {
         this.id = id;

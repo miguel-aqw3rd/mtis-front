@@ -1,63 +1,49 @@
 package com.app.mtis;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.VolleyError;
+import com.app.mtis.requestAPI.VolleyBall;
 
 public class EntriesTest extends AppCompatActivity {
     private Context context=this;
+    private TextView test;
 
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.test);
+        test = findViewById(R.id.testview);
+
+
         VolleyBall volley = new VolleyBall(context);
 
 
-        String token = "1234";
-        // Almacenar el nombre de usuario y el token en las preferencias compartidas.
-        SharedPreferences preferences = context.getSharedPreferences("SESSIONS_APP_PREFS", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("auth-token", token);
-        editor.apply();
+        String tokenJuan = "71ce3a7803c2f5eccee34ef6d36107";
+        String tokenTeodora = "3c1125d181d6ecaf6cb1bb7f059538";
 
+        //volley.setAuthToken(token);
 
-
-
-        volley.getQuestion(1, new VolleyBall.VolleyCallback() {
+        volley.getEntry(2, new VolleyBall.VolleyCallback() {
             @Override
             public void onSuccess() {
-                String text = VolleyBall.getQuestion().getText();
-                Log.d("Response", text);
+                String text = VolleyBall.getEntry().getText();
+                test.setText(text);
             }
 
             @Override
             public void onError(VolleyError error) {
 
             }
-
         });
 
-
-        volley.getGoals(new VolleyBall.VolleyCallback() {
-                            @Override
-                            public void onSuccess() {
-
-                            }
-
-                            @Override
-                            public void onError(VolleyError error) {
-
-                            }
-                        }, 1);
-        VolleyBall.getGoals();
 
     }
 

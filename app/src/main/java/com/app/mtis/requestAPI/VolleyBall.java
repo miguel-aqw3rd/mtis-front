@@ -1,4 +1,6 @@
-package com.app.mtis;
+package com.app.mtis.requestAPI;
+
+import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,10 +27,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VolleyBall {
-    private static final String server = "http://127.0.0.1:8000/";
+    private static final String server = "http://10.0.2.2:8000/";
     private RequestQueue queue;
     private Context context;
 
+    private String auxString;
     private static Entry entry;
     private static ArrayList<Entry> entries;
     private static EntryGroup entryGroup;
@@ -47,8 +50,14 @@ public class VolleyBall {
         void onError(VolleyError error);
     }
     private String getAuthToken(){ // Function that returns the current locally saved token
-        SharedPreferences prefs = context.getSharedPreferences("SESSIONS_APP_PREFS", Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences("SESSIONS_APP_PREFS", MODE_PRIVATE);
         return prefs.getString("auth-token", "randomtoken");
+    }
+    private void setAuthToken(String token){
+        SharedPreferences preferences = context.getSharedPreferences("SESSIONS_APP_PREFS", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("auth-token", token);
+        editor.apply();
     }
 
 
@@ -101,7 +110,15 @@ public class VolleyBall {
                         callback.onError(error);
                     }
                 }
-        );
+        ){// Pass on headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headerMap = new HashMap<String, String>();
+                headerMap.put("Content-Type", "application/json");
+                headerMap.put("auth-token", getAuthToken());
+                return headerMap;
+            }
+        };
         this.queue.add(requestAnswer);
     }
     public void getEntries(final VolleyCallback callback){
@@ -377,19 +394,23 @@ public class VolleyBall {
         this.queue.add(request);
     }
     public void getEntryGroups(final VolleyCallback callback){
-        getEntryGroups(-1, false, callback);
+        getEntryGroups(-1, -1, callback);
     }
     public void getEntryGroups(int level, final VolleyCallback callback){
-        getEntryGroups(level, false, callback);
+        getEntryGroups(level, -1, callback);
     }
-    public void getEntryGroups(boolean favorites, final VolleyCallback callback){
+    public void getEntryGroups(final VolleyCallback callback, int favorites){
         getEntryGroups(-1, favorites, callback);
     }
-    public void getEntryGroups(int level, boolean favorites, final VolleyCallback callback){
+    // -1 => None, 0 => False, 1 => True
+    public void getEntryGroups(int level, int favorites, final VolleyCallback callback){
         String url = server + "api/v1/entrygroups";
-        if(favorites) url+="?favorites=True";
-        else url+="?favorites=False";
-        if(level!=-1) url+="&level="+level;
+        UrlQuery query = new UrlQuery();
+        if (favorites == 1) query.put("favorites", "true");
+        else if (favorites == 0) query.put("favorites", "false");
+        if (level != -1) query.put("level", Integer.toString(level));
+        url += query.getUrl();
+
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -599,59 +620,17 @@ public class VolleyBall {
     public void getGoals(int entryId, final VolleyCallback callback, int favorite){
         getGoals(entryId, -1, favorite, callback);
     }
+    // -1 => None, 0 => False, 1 => True
     public void getGoals(int entryId, int active, int favorite, final VolleyCallback callback){
         String url = server + "api/v1/goals";
-        if(entryId==-1){
-            if(active==0){
-                if(favorite==0){
-                    url += "?active=False&favorite=False";
-                }else if(favorite==1){
-                    url += "?active=False&favorite=True";
-                }else{
-                    url += "?active=False";
-                }
-            }else if(active==1){
-                if(favorite==0){
-                    url += "?active=True&favorite=False";
-                }else if(favorite==1){
-                    url += "?active=True&favorite=True";
-                }else{
-                    url += "?active=True";
-                }
-            }else{
-                if(favorite==0){
-                    url += "?favorite=False";
-                }else if(favorite==1){
-                    url += "?favorite=True";
-                }else{}
-            }
-        }else{
-            if(active==0){
-                if(favorite==0){
-                    url += "?entry="+entryId+"&active=False&favorite=False";
-                }else if(favorite==1){
-                    url += "?entry="+entryId+"&active=False&favorite=True";
-                }else{
-                    url += "?entry="+entryId+"&active=False";
-                }
-            }else if(active==1){
-                if(favorite==0){
-                    url += "?entry="+entryId+"&active=True&favorite=False";
-                }else if(favorite==1){
-                    url += "?entry="+entryId+"&active=True&favorite=True";
-                }else{
-                    url += "?entry="+entryId+"&active=True";
-                }
-            }else{
-                if(favorite==0){
-                    url += "?entry="+entryId+"&favorite=False";
-                }else if(favorite==1){
-                    url += "?entry="+entryId+"&favorite=True";
-                }else{
-                    url += "?entry="+entryId;
-                }
-            }
-        }
+        UrlQuery query = new UrlQuery();
+        if (entryId != -1) query.put("entry", Integer.toString(entryId));
+        if (favorite == 1) query.put("favorite", "true");
+        else if (favorite == 0) query.put("favorite", "false");
+        if (active == 1) query.put("active", "true");
+        else if (active == 0) query.put("active", "false");
+        url += query.getUrl();
+
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -689,8 +668,128 @@ public class VolleyBall {
 
 
 
-
-
+    public void signUp(String username, String password, final VolleyCallback callback) throws JSONException{
+        signUp(username, "", password, callback);
+    }
+    public void signUp(String username, String email, String password, final VolleyCallback callback) throws JSONException {
+        String url = server + "api/v1/signup";
+        JSONObject body = new JSONObject();
+        body.put("username", username);
+        if(!email.equals("")) body.put("email", email);
+        body.put("password", password);
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            setAuthToken(response.getString("token"));
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        callback.onSuccess();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError(error);
+                    }
+                }
+        );
+        this.queue.add(request);
+    }
+    public void logIn(String username, String password, final VolleyCallback callback) throws JSONException {
+        String url = server + "api/v1/login";
+        JSONObject body = new JSONObject();
+        body.put("username", username);
+        body.put("password", password);
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.PUT,
+                url,
+                body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            setAuthToken(response.getString("token"));
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        callback.onSuccess();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError(error);
+                    }
+                }
+        );
+        this.queue.add(request);
+    }
+    public void logOut(final VolleyCallback callback){
+        String url = server + "api/v1/logout";
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.PUT,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        callback.onSuccess();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError(error);
+                    }
+                }
+        ){// Pass on headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headerMap = new HashMap<String, String>();
+                headerMap.put("Content-Type", "application/json");
+                headerMap.put("auth-token", getAuthToken());
+                return headerMap;
+            }
+        };
+        this.queue.add(request);
+    }
+    public void changeName(String newName, final VolleyCallback callback) throws JSONException {
+        String url = server + "api/v1/name";
+        JSONObject body = new JSONObject();
+        body.put("name", newName);
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.PUT,
+                url,
+                body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        callback.onSuccess();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError(error);
+                    }
+                }
+        ){// Pass on headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headerMap = new HashMap<String, String>();
+                headerMap.put("Content-Type", "application/json");
+                headerMap.put("auth-token", getAuthToken());
+                return headerMap;
+            }
+        };
+        this.queue.add(request);
+    }
 
 
     public static void setEntries(JSONArray array) throws JSONException {
@@ -718,6 +817,10 @@ public class VolleyBall {
         }
     }
 
+    public String getAuxString() {
+        return auxString;
+    }
+
     public static Entry getEntry() {
         return entry;
     }
@@ -732,6 +835,10 @@ public class VolleyBall {
 
     public static ArrayList<EntryGroup> getEntryGroups() {
         return entryGroups;
+    }
+
+    public static ArrayList<EntryGroupAbridged> getEntryGroupsAbridged() {
+        return entryGroupsAbridged;
     }
 
     public static Goal getGoal() {

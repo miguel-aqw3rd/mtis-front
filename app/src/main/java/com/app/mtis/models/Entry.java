@@ -15,6 +15,12 @@ public class Entry {
         this.type = type;
         this.level = level;
     }
+    // Overloaded constructor for POST
+    public Entry(String text, int type, int level) {
+        this.text = text;
+        this.type = type;
+        this.level = level;
+    }
     public Entry(JSONObject json) throws JSONException {
         this.id = json.getInt("id");
         this.text = json.getString("text");
