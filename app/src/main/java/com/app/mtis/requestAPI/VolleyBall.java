@@ -59,6 +59,11 @@ public class VolleyBall {
         editor.putString("auth-token", token);
         editor.apply();
     }
+    public int getStatus(VolleyError error){
+        if(error.networkResponse == null) return -1;
+        int status = error.networkResponse.statusCode;
+        return status;
+    }
 
 
     public void getQuestion(int questionId, final VolleyCallback callback){
