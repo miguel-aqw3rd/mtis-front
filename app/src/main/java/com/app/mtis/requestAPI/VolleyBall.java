@@ -398,6 +398,37 @@ public class VolleyBall {
         };
         this.queue.add(request);
     }
+    public void putEntryGroupFavorite(int entryGroupId, final VolleyCallback callback){
+        String url = server + "api/v1/entrygroup/"+entryGroupId+"/favorite";
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.PUT,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        callback.onSuccess();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        callback.onError(error);
+                    }
+                }
+        ){// Pass on headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headerMap = new HashMap<String, String>();
+                headerMap.put("Content-Type", "application/json");
+                headerMap.put("auth-token", getAuthToken());
+                return headerMap;
+            }
+        };
+        this.queue.add(request);
+    }
     public void getEntryGroups(final VolleyCallback callback){
         getEntryGroups(-1, -1, callback);
     }

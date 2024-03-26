@@ -8,6 +8,8 @@ public class Entry {
     private String text;
     private int type;
     private int level;
+    private int childEntryGroupId; // The ID of the EntryGroup of which this Entry is the root
+    private int challengerEntryId;  // The ID of the Entry that "challenges" this Entry
 
     public Entry(int id, String text, int type, int level) {
         this.id = id;
@@ -26,6 +28,12 @@ public class Entry {
         this.text = json.getString("text");
         this.type = json.getInt("type");
         this.level = json.getInt("level");
+        try {
+            this.childEntryGroupId = json.getInt("child_entrygroup_id");
+        }catch (JSONException jsonException){/*Just in case the entry is not related to any entrygroup*/}
+        try {
+            this.challengerEntryId = json.getInt("entry_challenger_id");
+        }catch (JSONException jsonException){/*Just in case the entry is not challenged by any other entry*/}
     }
 
     public JSONObject toJSON() throws JSONException {
@@ -66,5 +74,21 @@ public class Entry {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getChildEntryGroupId() {
+        return childEntryGroupId;
+    }
+
+    public void setChildEntryGroupId(int childEntryGroupId) {
+        this.childEntryGroupId = childEntryGroupId;
+    }
+
+    public int getChallengerEntryId() {
+        return challengerEntryId;
+    }
+
+    public void setChallengerEntryId(int challengerEntryId) {
+        this.challengerEntryId = challengerEntryId;
     }
 }
