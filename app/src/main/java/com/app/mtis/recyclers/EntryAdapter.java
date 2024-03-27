@@ -93,7 +93,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryViewHolder> {
                             public void onSuccess() {
                                 EntryGroup entryGroup = VolleyBall.getEntryGroup();
                                 detailActivity.setEntryGroup(entryGroup);
-                                detailActivity.updateUI();
+                                detailActivity.updateDisplay();
                             }
                             @Override
                             public void onError(VolleyError error) {}
