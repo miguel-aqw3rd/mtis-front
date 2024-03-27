@@ -13,10 +13,12 @@
     <TextView
         android:id="@+id/entrycell_textview_text"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/entrycell_linlayout"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/entrycell_linlayout"
+        android:text="text"/>
     <LinearLayout
         android:id="@+id/entrycell_linlayout"
         android:layout_width="wrap_content"
@@ -26,16 +28,17 @@
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="vertical">
 
-        <Button
+        <com.app.mtis.custom.UpArrowImageView
             android:id="@+id/entrycell_goto_entrygroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="A"/>
-        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon_star"/>
+        <ImageView
             android:id="@+id/entrycell_makemain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="*"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon_star"
+            android:contentDescription="Make this entry the main entry of its entry group" />
 
 
     </LinearLayout>

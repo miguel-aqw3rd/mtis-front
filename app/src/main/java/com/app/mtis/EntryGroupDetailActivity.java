@@ -30,7 +30,7 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        VolleyBall volleyBall = new VolleyBall(context);
+        volleyBall = new VolleyBall(context);
         setContentView(R.layout.activity_entrygroup_detail);
         mainEntryTextView = findViewById(R.id.entrygroupdetail_textview_mainentry);
         entriesRecyclerView = findViewById(R.id.entrygroupdetail_recyclerview_entries);
@@ -55,13 +55,24 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
 
     }
 
-    private void updateUI(){
+    public void updateUI(){
         mainEntryTextView.setText(entryGroup.getMain().getText());
 
-        EntryAdapter myAdapter = new EntryAdapter(entryGroup.getId(), entryGroup.getEntries(), volleyBall);
+        EntryAdapter myAdapter = new EntryAdapter(EntryGroupDetailActivity.this);
         entriesRecyclerView.setAdapter(myAdapter);
         entriesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
     }
 
 
+    public EntryGroup getEntryGroup() {
+        return entryGroup;
+    }
+
+    public void setEntryGroup(EntryGroup entryGroup) {
+        this.entryGroup = entryGroup;
+    }
+
+    public VolleyBall getVolleyBall() {
+        return volleyBall;
+    }
 }

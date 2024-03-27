@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.app.mtis.EntryGroupDetailActivity;
 import com.app.mtis.R;
 import com.app.mtis.models.Entry;
+import com.app.mtis.models.EntryGroup;
 import com.app.mtis.requestAPI.VolleyBall;
 
 import java.util.ArrayList;
@@ -21,11 +22,18 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryViewHolder> {
     private ArrayList<Entry> entries;
     private VolleyBall volleyBall;
     private int currentEntryGroupId;
+    private EntryGroupDetailActivity detailActivity;
 
     public EntryAdapter(int currentEntryGroupId, ArrayList<Entry> entries, VolleyBall volleyBall) {
         this.entries = entries;
         this.volleyBall = volleyBall;
         this.currentEntryGroupId = currentEntryGroupId;
+    }
+    public EntryAdapter(EntryGroupDetailActivity detailActivity){
+        this.detailActivity = detailActivity;
+        this.entries = detailActivity.getEntryGroup().getEntries();
+        this.currentEntryGroupId = detailActivity.getEntryGroup().getId();
+        this.volleyBall = detailActivity.getVolleyBall();
     }
 
     @NonNull
@@ -79,7 +87,18 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryViewHolder> {
             public void onClick(View v) {
                 volleyBall.putMainEntry(entry.getId(), EntryAdapter.this.currentEntryGroupId, new VolleyBall.VolleyCallback() {
                     @Override
-                    public void onSuccess() {}
+                    public void onSuccess() {
+                        volleyBall.getEntryGroup(currentEntryGroupId, new VolleyBall.VolleyCallback() {
+                            @Override
+                            public void onSuccess() {
+                                EntryGroup entryGroup = VolleyBall.getEntryGroup();
+                                detailActivity.setEntryGroup(entryGroup);
+                                detailActivity.updateUI();
+                            }
+                            @Override
+                            public void onError(VolleyError error) {}
+                        });
+                    }
                     @Override
                     public void onError(VolleyError error) {}
                 });
