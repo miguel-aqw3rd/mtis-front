@@ -1,7 +1,6 @@
 package com.app.mtis.recyclers;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,21 +11,18 @@ import com.app.mtis.R;
 import com.app.mtis.custom.UpArrowImageView;
 import com.app.mtis.models.Entry;
 
-public class EntryViewHolder extends RecyclerView.ViewHolder {
+public class EntryJournalViewHolder extends RecyclerView.ViewHolder {
     private TextView text;
     private UpArrowImageView entryGroupButton;
-    private ImageView mainEntryButton;
 
-    public EntryViewHolder(@NonNull View itemView) {
+    public EntryJournalViewHolder(@NonNull View itemView) {
         super(itemView);
-
-        text = itemView.findViewById(R.id.entrycell_textview_text);
-        entryGroupButton = itemView.findViewById(R.id.entrycell_goto_entrygroup);
-        mainEntryButton = itemView.findViewById(R.id.entrycell_makemain);
+        text = itemView.findViewById(R.id.entryjournalcell_textview_text);
+        entryGroupButton = itemView.findViewById(R.id.entryjournalcell_goto_entrygroup);
 
     }
     public void bindData(Entry entry){
-        text.setText(entry.getText()); //TODO: En el caso general, no puedo mostrar todo el texto: hacer una elipsis con substring()
+        text.setText(entry.getText());
         if (entry.getChildEntryGroupId() == 0) entryGroupButton.setSrcArrow(false);
         else entryGroupButton.setSrcArrow(true);
     }

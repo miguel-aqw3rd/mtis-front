@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
     private UpArrowImageView mainEntryChildEntryGroupButton;
     private FavoriteImageView entryGroupFavoriteButton;
     private RecyclerView entriesRecyclerView;
+    private ImageView addButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
         mainEntryChildEntryGroupButton = findViewById(R.id.entrygroupdetail_imgview_mainentry_childentrygroup);
         entryGroupFavoriteButton = findViewById(R.id.entrygroupdetail_imgview_favorite);
         entriesRecyclerView = findViewById(R.id.entrygroupdetail_recyclerview_entries);
+        addButton = findViewById(R.id.entrygroupdetail_imgview_add);
 
         entryGroupFavoriteButton.setOnClickListener(new View.OnClickListener() {
             // TODO: Cambiar el icono <3 en la UI instantaneamente, y luego deshacer el cambio solo en caso de error en la peticion PUT
@@ -100,6 +103,23 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
                 }
             }
         });
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { // Starts the activity to write a new entry in the current entrygroup. The group's id is passed
+                Intent intent = new Intent(context, NewEntryActivity.class);
+                intent.putExtra("entryGroupId", entryGroup.getId());
+                startActivity(intent);
+            }
+        });
+
+
+
+        
+
+
+
+
+
 
         Intent intent = getIntent();
         entryGroupId = intent.getIntExtra("entryGroupId", 0);

@@ -29,5 +29,6 @@ public class FavoriteImageView extends androidx.appcompat.widget.AppCompatImageV
         if(favorite) this.setImageResource(srcFavorite);
         else this.setImageResource(srcNotFavorite);
     }
+    //TODO: Crear un método para hacer toggle
 
 }

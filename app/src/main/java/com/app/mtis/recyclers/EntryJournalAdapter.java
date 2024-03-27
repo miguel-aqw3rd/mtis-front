@@ -17,39 +17,30 @@ import com.app.mtis.requestAPI.VolleyBall;
 
 import java.util.ArrayList;
 
-public class EntryAdapter extends RecyclerView.Adapter<EntryViewHolder> {
-
+public class EntryJournalAdapter extends RecyclerView.Adapter<EntryJournalViewHolder> {
+// TODO: Mirar de refactorizar esto con herencia de clases. ¿Son los dos RecyclerView tipo Entry suficientemente similares/compatibles?
     private ArrayList<Entry> entries;
     private VolleyBall volleyBall;
-    private int currentEntryGroupId;
-    private EntryGroupDetailActivity detailActivity;
 
-    public EntryAdapter(int currentEntryGroupId, ArrayList<Entry> entries, VolleyBall volleyBall) {
+    public EntryJournalAdapter(ArrayList<Entry> entries, VolleyBall volleyBall) {
         this.entries = entries;
         this.volleyBall = volleyBall;
-        this.currentEntryGroupId = currentEntryGroupId;
-    }
-    public EntryAdapter(EntryGroupDetailActivity detailActivity){
-        this.detailActivity = detailActivity;
-        this.entries = detailActivity.getEntryGroup().getEntries();
-        this.currentEntryGroupId = detailActivity.getEntryGroup().getId();
-        this.volleyBall = detailActivity.getVolleyBall();
     }
 
     @NonNull
     @Override
-    public EntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public EntryJournalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View cellView = inflater.inflate(R.layout.recyclercell_entry, parent, false);
-        return new EntryViewHolder(cellView);
+        View cellView = inflater.inflate(R.layout.recyclercell_entry_journal, parent, false);
+        return new EntryJournalViewHolder(cellView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EntryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EntryJournalViewHolder holder, int position) {
         Entry entry = this.entries.get(position);
         holder.bindData(entry);
 
-        holder.itemView.findViewById(R.id.entrycell_goto_entrygroup).setOnClickListener(new View.OnClickListener() {
+        holder.itemView.findViewById(R.id.entryjournalcell_goto_entrygroup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int entryGroupId = entry.getChildEntryGroupId();
@@ -61,7 +52,6 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryViewHolder> {
                     volleyBall.postEntryGroup(entry.getId(), new VolleyBall.VolleyCallback() {
                         @Override
                         public void onSuccess() { // I don't know the new entrygroup's ID. I get it from the updated Entry object
-                            // TODO: Esto es menos laborioso y confuso si el server devuelve la id del nuevo EntryGroup... Tengo que modificar el endpoint y la correspondiente request en Volleyball
                             volleyBall.getEntry(entry.getId(), new VolleyBall.VolleyCallback() {
                                 @Override
                                 public void onSuccess() { // The same. I start EntryGroupDetailActivity, with the new EntryGroup
@@ -83,28 +73,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryViewHolder> {
             }
         });
 
-        holder.itemView.findViewById(R.id.entrycell_makemain).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                volleyBall.putMainEntry(entry.getId(), EntryAdapter.this.currentEntryGroupId, new VolleyBall.VolleyCallback() {
-                    @Override
-                    public void onSuccess() {
-                        volleyBall.getEntryGroup(currentEntryGroupId, new VolleyBall.VolleyCallback() {
-                            @Override
-                            public void onSuccess() {
-                                EntryGroup entryGroup = VolleyBall.getEntryGroup();
-                                detailActivity.setEntryGroup(entryGroup);
-                                detailActivity.updateDisplay();
-                            }
-                            @Override
-                            public void onError(VolleyError error) {}
-                        });
-                    }
-                    @Override
-                    public void onError(VolleyError error) {}
-                });
-            }
-        });
+
     }
 
     @Override
