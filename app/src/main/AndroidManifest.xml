@@ -28,6 +28,9 @@
         <activity android:name=".LoginActivity"/>
         <activity android:name=".SignupActivity"/>
         <activity android:name=".EntryGroupDetailActivity" android:launchMode="standard"/>
+        <activity android:name=".EntryDetailActivity" android:launchMode="standard"/>
+        <activity android:name=".NewEntryActivity" android:launchMode="standard"/>
+        <activity android:name=".NewGoalActivity" android:launchMode="standard"/>
 
     </application>
 

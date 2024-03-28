@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Mtis</string>
+
+    <string-array name="entry_types">
+        <item>Blue</item>
+        <item>Green</item>
+    </string-array>
+
+    <string-array name="goals_filter">
+        <item>All</item>
+        <item>Favorites</item>
+        <item>Active</item>
+    </string-array>
+
 </resources>

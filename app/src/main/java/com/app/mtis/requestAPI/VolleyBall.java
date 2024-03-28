@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -888,52 +889,5 @@ public class VolleyBall {
     public static Question getQuestion() {
         return question;
     }
-
-    /*
-    private Request(Context context) {
-        this.context = context;
-        requestQueue = getRequestQueue();
-    }
-
-    public static synchronized Request getInstance(Context context) {
-        if (instance == null) {
-            instance = new Request(context);
-        }
-        return instance;
-    }
-
-    public RequestQueue getRequestQueue() {
-        if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(context.getApplicationContext());
-        }
-        return requestQueue;
-    }
-
-    public void get(String url, final VolleyCallback callback) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> callback.onSuccess(response),
-                error -> callback.onError(error));
-        addToRequestQueue(stringRequest);
-    }
-
-    public void post(String url, JSONObject params, final VolleyCallback callback) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
-                response -> callback.onSuccess(response.toString()),
-                error -> callback.onError(error));
-        addToRequestQueue(jsonObjectRequest);
-    }
-
-    // Add more methods for other types of requests as needed
-
-    public interface VolleyCallback {
-        void onSuccess(String response);
-        void onError(Exception error);
-    }
-
-    public <T> void addToRequestQueue(Request<T> request) {
-        getRequestQueue().add(request);
-    }
-*/
-
 
 }

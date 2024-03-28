@@ -29,6 +29,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.core:core:1.12.0") // As suggested by Gepetto
+
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.android.volley:volley:1.2.1") // Volley

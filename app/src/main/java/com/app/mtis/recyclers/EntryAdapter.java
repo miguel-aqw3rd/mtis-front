@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
+import com.app.mtis.EntryDetailActivity;
 import com.app.mtis.EntryGroupDetailActivity;
 import com.app.mtis.R;
 import com.app.mtis.models.Entry;
@@ -48,6 +49,15 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryViewHolder> {
     public void onBindViewHolder(@NonNull EntryViewHolder holder, int position) {
         Entry entry = this.entries.get(position);
         holder.bindData(entry);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), EntryDetailActivity.class);
+                intent.putExtra("entryId", entry.getId());
+                v.getContext().startActivity(intent);
+            }
+        });
 
         holder.itemView.findViewById(R.id.entrycell_goto_entrygroup).setOnClickListener(new View.OnClickListener() {
             @Override

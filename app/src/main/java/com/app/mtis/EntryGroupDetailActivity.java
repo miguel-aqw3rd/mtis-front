@@ -46,6 +46,7 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
         entryGroupFavoriteButton = findViewById(R.id.entrygroupdetail_imgview_favorite);
         entriesRecyclerView = findViewById(R.id.entrygroupdetail_recyclerview_entries);
         addButton = findViewById(R.id.entrygroupdetail_imgview_add);
+        //TODO: Poner un onClick al frame de la main Entry que lleve a su EntryDetail
 
         entryGroupFavoriteButton.setOnClickListener(new View.OnClickListener() {
             // TODO: Cambiar el icono <3 en la UI instantaneamente, y luego deshacer el cambio solo en caso de error en la peticion PUT
@@ -140,6 +141,26 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
 
 
     }
+    //TODO: Actualizar el RecyclerView en onResume para que una nueva Entry aparezca después de ser añadida
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(entryGroupId != 0){
+            volleyBall.getEntryGroup(entryGroupId, new VolleyBall.VolleyCallback() {
+                @Override
+                public void onSuccess() {
+                    entryGroup = VolleyBall.getEntryGroup();
+
+                    updateDisplay();
+                }
+                @Override
+                public void onError(VolleyError error) {}
+            });
+        }
+    }
+
+    //TODO: Que el RecyclerView posicione en primera posicion (realtiva) la nueva Entry
 
     public void updateDisplay(){
         updateMain();

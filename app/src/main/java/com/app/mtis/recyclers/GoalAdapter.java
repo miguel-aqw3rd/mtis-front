@@ -7,9 +7,11 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
+import com.app.mtis.EntryDetailActivity;
 import com.app.mtis.R;
 import com.app.mtis.custom.FavoriteImageView;
 import com.app.mtis.models.Goal;
@@ -24,7 +26,15 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalViewHolder> {
     private ArrayList<Goal> goals;
     private VolleyBall volleyBall;
 
+    private EntryDetailActivity hostActivity;
+
     public GoalAdapter(ArrayList<Goal> goals, VolleyBall volleyBall) {
+        this.goals = goals;
+        this.volleyBall = volleyBall;
+    }
+    public GoalAdapter(EntryDetailActivity activity, ArrayList<Goal> goals, VolleyBall volleyBall){
+        //TODO: Una idea es proveer un objeto interfaz que implementen las clases de las actividades que usen GoalAdapter, con métodos como getGoalsArrayList() y updateRecycler()
+        this.hostActivity = activity;
         this.goals = goals;
         this.volleyBall = volleyBall;
     }
@@ -54,14 +64,10 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalViewHolder> {
                     volleyBall.putGoal(goalId, goal, new VolleyBall.VolleyCallback() {
                         @Override
                         public void onSuccess() {
-                            //TODO: Recarga el RecyclerView de Goals, en caso de que por defecto se ordene los logros por activados
+                            holder.bindData(goal);
                         }
                         @Override
                         public void onError(VolleyError error) {
-                            // In case there is an error updating new status in the server, the changes must be undone
-                            // TODO: Tiene peligro esta auto-referencia
-                            switchActive.setChecked(!switchActive.isChecked());
-                            goal.setActive(!goal.isActive());
                         }
                     });
                 } catch (JSONException e) {
@@ -76,7 +82,8 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalViewHolder> {
                 volleyBall.deleteGoal(goal.getId(), new VolleyBall.VolleyCallback() {
                     @Override
                     public void onSuccess() {
-                        // TODO: Recarga el recyclerview de Goals
+                        // Recarga el recyclerview de Goals
+                        hostActivity.updateGoalsRecycler();
                     }
                     @Override
                     public void onError(VolleyError error) {
@@ -95,7 +102,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalViewHolder> {
                     volleyBall.putGoal(goalId, goal, new VolleyBall.VolleyCallback() {
                         @Override
                         public void onSuccess() {
-                            favoriteImageView.setSrcFavorite(goal.isFavorite());
+                            holder.bindData(goal);
                         }
                         @Override
                         public void onError(VolleyError error) {
