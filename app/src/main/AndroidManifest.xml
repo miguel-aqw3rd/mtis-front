@@ -25,8 +25,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".SignupActivity"/>
+        <activity android:name=".user.LoginActivity"/>
+        <activity android:name=".user.SignupActivity"/>
         <activity android:name=".EntryGroupDetailActivity" android:launchMode="standard"/>
         <activity android:name=".EntryDetailActivity" android:launchMode="standard"/>
         <activity android:name=".NewEntryActivity" android:launchMode="standard"/>

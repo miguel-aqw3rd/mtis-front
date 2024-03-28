@@ -12,4 +12,12 @@
         <item>Active</item>
     </string-array>
 
+    <string-array name="goal_frequency">
+        <item>Daily</item>
+        <item>Twice a Day</item>
+        <item>Weekly</item>
+        <item>Twice a Week</item>
+        <item>3 Times a Week</item>
+    </string-array>
+
 </resources>

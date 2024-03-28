@@ -35,6 +35,7 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
     private FavoriteImageView entryGroupFavoriteButton;
     private RecyclerView entriesRecyclerView;
     private ImageView addButton;
+    private View mainEntryFrame;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +48,31 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
         entriesRecyclerView = findViewById(R.id.entrygroupdetail_recyclerview_entries);
         addButton = findViewById(R.id.entrygroupdetail_imgview_add);
         //TODO: Poner un onClick al frame de la main Entry que lleve a su EntryDetail
+        mainEntryFrame = findViewById(R.id.entrygroupdetail_frame_mainentry);
+
+        Intent intent = getIntent();
+        entryGroupId = intent.getIntExtra("entryGroupId", 0);
+        if(entryGroupId != 0){
+            volleyBall.getEntryGroup(entryGroupId, new VolleyBall.VolleyCallback() {
+                @Override
+                public void onSuccess() {
+                    entryGroup = VolleyBall.getEntryGroup();
+
+                    updateDisplay();
+                }
+                @Override
+                public void onError(VolleyError error) {}
+            });
+        }
+
+        mainEntryFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, EntryDetailActivity.class);
+                intent.putExtra("entryId", entryGroup.getMain().getId());
+                startActivity(intent);
+            }
+        });
 
         entryGroupFavoriteButton.setOnClickListener(new View.OnClickListener() {
             // TODO: Cambiar el icono <3 en la UI instantaneamente, y luego deshacer el cambio solo en caso de error en la peticion PUT
@@ -112,32 +138,6 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-        
-
-
-
-
-
-
-        Intent intent = getIntent();
-        entryGroupId = intent.getIntExtra("entryGroupId", 0);
-
-        if(entryGroupId != 0){
-            volleyBall.getEntryGroup(entryGroupId, new VolleyBall.VolleyCallback() {
-                @Override
-                public void onSuccess() {
-                    entryGroup = VolleyBall.getEntryGroup();
-
-                    updateDisplay();
-                }
-                @Override
-                public void onError(VolleyError error) {}
-            });
-        }
-
 
 
     }

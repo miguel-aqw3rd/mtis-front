@@ -88,6 +88,29 @@ public class EntryDetailActivity extends AppCompatActivity {
             }
         });
 
+        // Loads the Entry from server
+        Intent intent = getIntent();
+        entryId = intent.getIntExtra("entryId", 0);
+        if (entryId != 0){
+            volleyBall.getEntry(entryId, new VolleyBall.VolleyCallback() {
+                @Override
+                public void onSuccess() {
+                    entry = VolleyBall.getEntry();
+
+                    updateEntryFrame();
+                    updateGoalsRecycler();
+                }
+                @Override
+                public void onError(VolleyError error) {
+                    Toast.makeText(context, "Error: Couldn't retrieve data", Toast.LENGTH_SHORT).show();
+                    // Close activity if data can't be displayed
+                    finish();
+                }
+            });
+        }else{
+            Toast.makeText(context, "Error: entry undefined", Toast.LENGTH_SHORT).show();
+        }
+
 
         //TODO: Quizás sería buena idea pedir confirmación al usuario a la hora de crear un nuevo EntryGroup
         //TODO: Refactorizar: las strings harcodeadas que sirven de clave en los intents estaría mejor especificarlas en strings.xml
@@ -145,32 +168,14 @@ public class EntryDetailActivity extends AppCompatActivity {
         });
 
 
-        // Loads the Entry from server
-        Intent intent = getIntent();
-        entryId = intent.getIntExtra("entryId", 0);
-        if (entryId != 0){
-            volleyBall.getEntry(entryId, new VolleyBall.VolleyCallback() {
-                @Override
-                public void onSuccess() {
-                    entry = VolleyBall.getEntry();
-
-                    updateEntryFrame();
-                    updateGoalsRecycler();
-                }
-                @Override
-                public void onError(VolleyError error) {
-                    Toast.makeText(context, "Error: Couldn't retrieve data", Toast.LENGTH_SHORT).show();
-                    // Close activity if data can't be displayed
-                    finish();
-                }
-            });
-        }else{
-            Toast.makeText(context, "Error: entry undefined", Toast.LENGTH_SHORT).show();
-        }
-
-
-
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateGoalsRecycler();
+    }
+
     public void updateGoalsRecycler(){
         volleyBall.getGoals(entryId, activeGoalsFilter, favoriteGoalsFilter, new VolleyBall.VolleyCallback() {
             @Override
