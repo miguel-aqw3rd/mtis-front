@@ -61,8 +61,9 @@ public class EntryGroupAdapter extends RecyclerView.Adapter<EntryGroupViewHolder
                 volleyBall.putEntryGroupFavorite(entryGroup.getId(), new VolleyBall.VolleyCallback() {
                     @Override
                     public void onSuccess() {
-                        //TODO: Un método toggle para FavoriteImageView me ahorraría peticiones de red innecesarias
-                        //favoriteImageView.setSrcFavorite(??);
+                        //Toggles favorite status locally,
+                        entryGroup.setFavorite(!entryGroup.isFavorite());
+                        holder.bindData(entryGroup);
                     }
                     @Override
                     public void onError(VolleyError error) {
@@ -76,6 +77,30 @@ public class EntryGroupAdapter extends RecyclerView.Adapter<EntryGroupViewHolder
             @Override
             public void onClick(View v) {
                 //TODO: Expandir el RecyclerView de los EntryGroups hijos
+                if(! holder.isExpanded()) {
+                    volleyBall.getEntryGroups(-1, -1, entryGroup.getId(), new VolleyBall.VolleyCallback() {
+                        @Override
+                        public void onSuccess() {
+                            ArrayList<EntryGroupAbridged> childEntryGroups = VolleyBall.getEntryGroupsAbridged();
+                            holder.setExpanded(true);
+                            holder.bindData(entryGroup);
+                            holder.setRecyclerView(childEntryGroups, volleyBall);
+
+                        }
+                        @Override
+                        public void onError(VolleyError error) {
+                            ArrayList<EntryGroupAbridged> childEntryGroups = new ArrayList<>(); //Empty ArrayList
+                            holder.setExpanded(true);
+                            holder.bindData(entryGroup);
+                            holder.setRecyclerView(childEntryGroups, volleyBall);
+                        }
+                    });
+                }else{
+                    ArrayList<EntryGroupAbridged> childEntryGroups = new ArrayList<>(); //Empty ArrayList
+                    holder.setExpanded(false);
+                    holder.bindData(entryGroup);
+                    holder.setRecyclerView(childEntryGroups, volleyBall);
+                }
             }
         });
 

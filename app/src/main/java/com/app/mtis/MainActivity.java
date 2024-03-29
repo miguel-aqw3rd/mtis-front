@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, EntryDetailActivity.class);
-                intent.putExtra("entryId", 2);
+                Intent intent = new Intent(context, EntryGroupsListActivity.class);
+                //intent.putExtra("entryId", 2);
                 context.startActivity(intent);
             }
         });

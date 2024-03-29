@@ -431,21 +431,22 @@ public class VolleyBall {
         this.queue.add(request);
     }
     public void getEntryGroups(final VolleyCallback callback){
-        getEntryGroups(-1, -1, callback);
+        getEntryGroups(-1, -1, -1, callback);
     }
     public void getEntryGroups(int level, final VolleyCallback callback){
-        getEntryGroups(level, -1, callback);
+        getEntryGroups(level, -1, -1, callback);
     }
     public void getEntryGroups(final VolleyCallback callback, int favorites){
-        getEntryGroups(-1, favorites, callback);
+        getEntryGroups(-1, favorites, -1, callback);
     }
     // -1 => None, 0 => False, 1 => True
-    public void getEntryGroups(int level, int favorites, final VolleyCallback callback){
+    public void getEntryGroups(int level, int favorites, int parentEntryGroupId, final VolleyCallback callback){
         String url = server + "api/v1/entrygroups";
         UrlQuery query = new UrlQuery();
         if (favorites == 1) query.put("favorites", "true");
         else if (favorites == 0) query.put("favorites", "false");
         if (level != -1) query.put("level", Integer.toString(level));
+        if (parentEntryGroupId != -1) query.put("entrygroup", Integer.toString(parentEntryGroupId));
         url += query.getUrl();
 
         JsonObjectRequest request = new JsonObjectRequest(
