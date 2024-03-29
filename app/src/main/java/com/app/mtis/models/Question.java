@@ -24,8 +24,18 @@ public class Question {
         this.text = json.getString("text");
         this.a = json.getString("a");
         this.b = json.getString("b");
-        this.nextQa = json.getInt("nextQa");
-        this.nextQb = json.getInt("nextQb");
+        try{
+            this.nextQa = json.getInt("nextQa");
+        }catch (JSONException jsonException){
+            /*In case there is no next chapter*/
+            this.nextQa = -1;
+        }
+        try{
+            this.nextQb = json.getInt("nextQb");
+        }catch (JSONException jsonException){
+            /*In case there is no next chapter*/
+            this.nextQb = -1;
+        }
     }
 
     public int getId() {
