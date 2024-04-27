@@ -21,6 +21,7 @@ import com.app.mtis.custom.UpArrowImageView;
 import com.app.mtis.models.EntryGroup;
 import com.app.mtis.recyclers.EntryAdapter;
 import com.app.mtis.requestAPI.VolleyBall;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class EntryGroupDetailActivity extends AppCompatActivity {
 
@@ -34,7 +35,7 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
     private UpArrowImageView mainEntryChildEntryGroupButton;
     private FavoriteImageView entryGroupFavoriteButton;
     private RecyclerView entriesRecyclerView;
-    private ImageView addButton;
+    private FloatingActionButton addButton;
     private View mainEntryFrame;
 
     @Override
@@ -47,7 +48,7 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
         entryGroupFavoriteButton = findViewById(R.id.entrygroupdetail_imgview_favorite);
         entriesRecyclerView = findViewById(R.id.entrygroupdetail_recyclerview_entries);
         addButton = findViewById(R.id.entrygroupdetail_imgview_add);
-        //TODO: Poner un onClick al frame de la main Entry que lleve a su EntryDetail
+        //DONE: Poner un onClick al frame de la main Entry que lleve a su EntryDetail
         mainEntryFrame = findViewById(R.id.entrygroupdetail_frame_mainentry);
 
         Intent intent = getIntent();
@@ -98,8 +99,8 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
                 });
             }
         });
+        // DONE: Por ahora es un tanto confuso... Marcar de algun modo cuando la main entry es tambien la root entry, porque su EntryGroup hijo es el actual
         mainEntryChildEntryGroupButton.setOnClickListener(new View.OnClickListener() {
-            // TODO: Por ahora es un tanto confuso... Marcar de algun modo cuando la main entry es tambien la root entry, porque su EntryGroup hijo es el actual
             @Override
             public void onClick(View v) {
                 int mainEntryId = entryGroup.getMain().getId();
@@ -141,7 +142,6 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
 
 
     }
-    //TODO: Actualizar el RecyclerView en onResume para que una nueva Entry aparezca después de ser añadida
     @Override
     protected void onResume() {
         super.onResume();
@@ -151,7 +151,6 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess() {
                     entryGroup = VolleyBall.getEntryGroup();
-
                     updateDisplay();
                 }
                 @Override
@@ -160,7 +159,7 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
         }
     }
 
-    //TODO: Que el RecyclerView posicione en primera posicion (realtiva) la nueva Entry
+    //TODO: Que el RecyclerView posicione en primera posicion (relativa) la nueva Entry
 
     public void updateDisplay(){
         updateMain();
@@ -170,6 +169,12 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
         mainEntryTextView.setText(entryGroup.getMain().getText());
         entryGroupFavoriteButton.setSrcFavorite(entryGroup.isFavorite());  // Selects the appropiate image source to reflect ths status (favorite/not favorite)
         mainEntryChildEntryGroupButton.setSrcArrow(entryGroup.getMain().getChildEntryGroupId() != 0);  // Analogous: main Entry has a child EntryGroup iff its id is not 0
+        //If main entry is the root entry of the entrygroup, its child entrygroup is the current one: deactivate button
+        if(entryGroup.getRoot().getId() == entryGroup.getMain().getId()){
+            mainEntryChildEntryGroupButton.deactivateButton();
+        }else{
+            mainEntryChildEntryGroupButton.activateButton();
+        }
     }
     private void updateAdapter(){
         EntryAdapter myAdapter = new EntryAdapter(EntryGroupDetailActivity.this);
@@ -177,6 +182,18 @@ public class EntryGroupDetailActivity extends AppCompatActivity {
         entriesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         //entriesRecyclerView.addItemDecoration(new CustomDivider(context));
         // TODO: Arreglar el CustomDivider... Dibuja la linea inclinada
+    }
+
+    public void refreshEntryGroup(){
+        volleyBall.getEntryGroup(entryGroupId, new VolleyBall.VolleyCallback() {
+            @Override
+            public void onSuccess() {
+                entryGroup = VolleyBall.getEntryGroup();
+                updateDisplay();
+            }
+            @Override
+            public void onError(VolleyError error) {}
+        });
     }
 
 

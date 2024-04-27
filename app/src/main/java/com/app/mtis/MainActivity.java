@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         VolleyBall volleyBall = new VolleyBall(context);
 
-        volleyBall.getEntries(new VolleyBall.VolleyCallback() {
+        /*volleyBall.getEntries(new VolleyBall.VolleyCallback() {
             @Override
             public void onSuccess() {}
             @Override
@@ -37,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
 
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, StoryActivity.class);
+                Intent intent = new Intent(context, JournalActivity.class);
                 //intent.putExtra("entryId", 2);
                 context.startActivity(intent);
             }

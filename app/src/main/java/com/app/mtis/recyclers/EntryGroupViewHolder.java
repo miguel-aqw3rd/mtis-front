@@ -29,24 +29,45 @@ public class EntryGroupViewHolder extends RecyclerView.ViewHolder {
     public EntryGroupViewHolder(@NonNull View itemView) {
         super(itemView);
         childEntryGroups = itemView.findViewById(R.id.entrygroupcell_recyclerview_childentrygroups);
-        //TODO: Tengo que añadir un RecyclerView (por defecto vacio e invisible) a cada una de las celdas. Contendrá los EntryGroups hijos de las Entries hijas de este EntryGroup
         mainEntryText = itemView.findViewById(R.id.entrygroupcell_textview_text);
         favoriteImageView = itemView.findViewById(R.id.entrygroupcell_imgview_favorite);
         expandImageView = itemView.findViewById(R.id.entrygroupcell_imgview_expand);
     }
-    //TODO: En base a que se determina el estado de expandImageView?
     public void bindData(EntryGroupAbridged entryGroupAbridged){
         mainEntryText.setText(entryGroupAbridged.getMain().getText());
         favoriteImageView.setSrcFavorite(entryGroupAbridged.isFavorite());
         expandImageView.setSrcExpanded(isExpanded);
+
+        formatViewAccordingToLevel(entryGroupAbridged);
     }
     public void setRecyclerView(ArrayList<EntryGroupAbridged> entryGroupAbridgedArrayList, VolleyBall volleyBall){
-        //TODO: Rellena el RecyclerView de EntryGroups hijos
         Context recyclersContext = itemView.getContext();
         EntryGroupAdapter myAdapter = new EntryGroupAdapter(entryGroupAbridgedArrayList, volleyBall);
         childEntryGroups.setAdapter(myAdapter);
         childEntryGroups.setLayoutManager(new LinearLayoutManager(recyclersContext));
 
+    }
+    private void formatViewAccordingToLevel(EntryGroupAbridged entryGroupAbridged){
+        int level = entryGroupAbridged.getLevel();
+        //TODO: Hay que lidiar mejor con la casuística. Además... esto no tiene en cuenta el nivel de los EntryGroups "base" (i.e. los supone de nivel 1)
+        if(level>5) level=5;
+        itemView.setPadding(level*7, 0, 0, 0);
+        switch (level){
+            case 1:
+                break;
+            case 2:
+                itemView.setBackgroundResource(R.color.naranja_muyclaro);
+                break;
+            case 3:
+                itemView.setBackgroundResource(R.color.lima_claro);
+                break;
+            case 4:
+                itemView.setBackgroundResource(R.color.lila_palido);
+                break;
+            case 5:
+                itemView.setBackgroundResource(R.color.turquesa_claro);
+                break;
+        }
     }
     public boolean isExpanded() {
         return isExpanded;

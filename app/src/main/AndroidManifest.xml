@@ -34,6 +34,7 @@
         <activity android:name=".EntryGroupsListActivity"/>
         <activity android:name=".StoryActivity" android:launchMode="standard"/>
         <activity android:name=".QuestionActivity" android:launchMode="standard"/>
+        <activity android:name=".JournalActivity" android:launchMode="standard"/>
 
     </application>
 

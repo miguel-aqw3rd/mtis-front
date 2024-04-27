@@ -34,7 +34,7 @@
                 android:id="@+id/entryjournalcell_goto_entrygroup"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/icon_star"/>
+                android:src="@drawable/icon_uparrow_filled"/>
 
 
         </LinearLayout>

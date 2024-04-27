@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.app.mtis.EntryDetailActivity;
 import com.app.mtis.EntryGroupDetailActivity;
 import com.app.mtis.R;
+import com.app.mtis.custom.UpArrowImageView;
 import com.app.mtis.models.Entry;
 import com.app.mtis.models.EntryGroup;
 import com.app.mtis.requestAPI.VolleyBall;
@@ -49,6 +50,13 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryViewHolder> {
     public void onBindViewHolder(@NonNull EntryViewHolder holder, int position) {
         Entry entry = this.entries.get(position);
         holder.bindData(entry);
+        // if this entry parent group id == this.currentGroupId
+        // When the Parent EntryGroup of an Entry is the current one, the entrygroup button should not be displayed
+        if (entry.getChildEntryGroupId() == this.currentEntryGroupId){
+            UpArrowImageView button = (UpArrowImageView) holder.itemView.findViewById(R.id.entrycell_goto_entrygroup);
+            button.deactivateButton();
+        }
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +112,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryViewHolder> {
                             public void onSuccess() {
                                 EntryGroup entryGroup = VolleyBall.getEntryGroup();
                                 detailActivity.setEntryGroup(entryGroup);
-                                detailActivity.updateDisplay();
+                                detailActivity.refreshEntryGroup();
                             }
                             @Override
                             public void onError(VolleyError error) {}

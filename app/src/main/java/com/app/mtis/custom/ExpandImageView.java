@@ -9,8 +9,8 @@ import androidx.annotation.Nullable;
 import com.app.mtis.R;
 // It turns out i dont need this class for now...
 public class ExpandImageView extends androidx.appcompat.widget.AppCompatImageView {
-    private static final int srcExpanded = R.drawable.icon_expandedarrow_v1;
-    private static final int srcCompact = R.drawable.icon_notexpandedarrow_v1;
+    private static final int srcExpanded = R.drawable.icon_downarrow;
+    private static final int srcCompact = R.drawable.icon_rightarrow;
 
     public ExpandImageView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
