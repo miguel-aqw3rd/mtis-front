@@ -3,12 +3,16 @@ package com.app.mtis;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,8 +23,8 @@ import com.app.mtis.requestAPI.VolleyBall;
 
 import java.util.ArrayList;
 
-public class ProfileActivity extends AppCompatActivity {
-    private Context context = this;
+public class ProfileActivity extends Fragment {
+    private Context context;
     private VolleyBall volleyBall;
 
     private RecyclerView goalsRecycler;
@@ -31,18 +35,21 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView editGoalsBtn;
     private ArrayList<Goal> goalsArray;
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_profile, container, false);
+        // Init context
+        context = requireContext();
+
         volleyBall = new VolleyBall(context);
 
-        goalsRecycler = findViewById(R.id.profile_recyclerview_goals);
-        settingsBtn = findViewById(R.id.profile_imgview_settings);
-        bookBtn = findViewById(R.id.profile_imgview_book);
-        avatar = findViewById(R.id.profile_imgview_avatar);
-        addGoalBtn = findViewById(R.id.profile_imgview_addgoal);
-        editGoalsBtn = findViewById(R.id.profile_imgview_editgoals);
+        goalsRecycler = rootView.findViewById(R.id.profile_recyclerview_goals);
+        settingsBtn = rootView.findViewById(R.id.profile_imgview_settings);
+        bookBtn = rootView.findViewById(R.id.profile_imgview_book);
+        avatar = rootView.findViewById(R.id.profile_imgview_avatar);
+        addGoalBtn = rootView.findViewById(R.id.profile_imgview_addgoal);
+        editGoalsBtn = rootView.findViewById(R.id.profile_imgview_editgoals);
 
         settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,12 +77,11 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
-
+        return rootView;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         updateGoalsRecycler();
     }

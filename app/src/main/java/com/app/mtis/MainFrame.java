@@ -21,7 +21,7 @@ public class MainFrame extends AppCompatActivity {
         setContentView(R.layout.mainframe);
         BottomNavigationView navBar = findViewById(R.id.mainframe_bottnavview_barmenu);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainframe_frame_navhost, new JournalActivity()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainframe_frame_navhost, new StoryActivity()).commit();
 
         navBar.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -31,15 +31,15 @@ public class MainFrame extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainframe_frame_navhost, fragment).commit();
                     return true;
                 }else if (menuItem.getItemId() == R.id.bottom_menu_story){
-                    Fragment fragment = new JournalActivity();
+                    Fragment fragment = new StoryActivity();
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainframe_frame_navhost, fragment).commit();
                     return true;
                 }else if (menuItem.getItemId() == R.id.bottom_menu_entrygroups){
-                    Fragment fragment = new JournalActivity();
+                    Fragment fragment = new EntryGroupsListActivity();
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainframe_frame_navhost, fragment).commit();
                     return true;
                 }else if (menuItem.getItemId() == R.id.bottom_menu_profile){
-                    Fragment fragment = new JournalActivity();
+                    Fragment fragment = new ProfileActivity();
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainframe_frame_navhost, fragment).commit();
                     return true;
                 }else {
