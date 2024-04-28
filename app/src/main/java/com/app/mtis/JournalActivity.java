@@ -3,29 +3,27 @@ package com.app.mtis;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
-import com.app.mtis.custom.FavoriteImageView;
-import com.app.mtis.custom.UpArrowImageView;
 import com.app.mtis.models.Entry;
-import com.app.mtis.models.EntryGroup;
-import com.app.mtis.recyclers.EntryAdapter;
 import com.app.mtis.recyclers.EntryJournalAdapter;
 import com.app.mtis.requestAPI.VolleyBall;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class JournalActivity extends AppCompatActivity {
-    private Context context = this;
+public class JournalActivity extends Fragment {
+    private Context context;
     private VolleyBall volleyBall;
 
     private ArrayList<Entry> entries = new ArrayList<>();
@@ -33,15 +31,22 @@ public class JournalActivity extends AppCompatActivity {
     private FloatingActionButton addButton;
     private View mainEntryFrame;
 
+    public JournalActivity(){
+        //Empty Constructor
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_journal, container, false);
+        // Init context
+        context = requireContext();
+
         volleyBall = new VolleyBall(context);
-        setContentView(R.layout.activity_journal);
-        entriesRecyclerView = findViewById(R.id.journal_recyclerview_entries);
-        addButton = findViewById(R.id.journal_imgview_add);
+        entriesRecyclerView = rootView.findViewById(R.id.journal_recyclerview_entries);
+        addButton = rootView.findViewById(R.id.journal_imgview_add);
         //Maybe ill do something with the frame later
-        mainEntryFrame = findViewById(R.id.journal_frame_mainentry);
+        mainEntryFrame = rootView.findViewById(R.id.journal_frame_mainentry);
 
         // Write new entry directly in journal
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -53,9 +58,10 @@ public class JournalActivity extends AppCompatActivity {
             }
         });
 
+        return rootView;
     }
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         downloadJournalEntries();
     }

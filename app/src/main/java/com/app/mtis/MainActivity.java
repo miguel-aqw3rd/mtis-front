@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ProfileActivity.class);
+                Intent intent = new Intent(context, MainFrame.class);
                 //intent.putExtra("entryId", 2);
                 context.startActivity(intent);
             }

@@ -36,6 +36,7 @@
         <activity android:name=".QuestionActivity" android:launchMode="standard"/>
         <activity android:name=".JournalActivity" android:launchMode="standard"/>
         <activity android:name=".ProfileActivity" android:launchMode="standard"/>
+        <activity android:name=".MainFrame" android:launchMode="standard"/>
 
     </application>
 
