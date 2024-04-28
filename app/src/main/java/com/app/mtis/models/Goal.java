@@ -10,6 +10,7 @@ public class Goal {
     private boolean active;
     private boolean favorite;
     private int entryId;
+    private boolean completed;
 
     public Goal(int id, String description, String frequency, boolean active, boolean favorite, int entryId) {
         this.id = id;
@@ -35,6 +36,9 @@ public class Goal {
         try {
             this.entryId = json.getInt("entry_id");
         }catch (JSONException jsonException){/*Just in case the goal is not related to any entry*/}
+        try {
+            this.completed = json.getBoolean("completed");
+        }catch (JSONException jsonException){/*Just in case*/}
     }
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
@@ -91,5 +95,12 @@ public class Goal {
 
     public void setEntryId(int entryId) {
         this.entryId = entryId;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+    public void markAsCompleted() {
+        this.completed = true;
     }
 }
